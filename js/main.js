@@ -83,6 +83,15 @@ function addNewKitten(event) {
   const valueDesc = inputDesc.value;
   const valuePhoto = inputPhoto.value;
   const valueName = inputName.value;
+  const newKittenDataObject = {
+    image: valuePhoto,
+    name: valueName,
+    desc: valueDesc,
+    race: "",
+  };
+
+  kittenDataList.push(newKittenDataObject);
+  renderKittenList(kittenDataList);
   if (valueDesc === "" && valuePhoto === "" && valueName === "") {
     labelMessageError.innerHTML = "¡Uy! parece que has olvidado algo";
   } else {
