@@ -12,7 +12,10 @@ const inputName = document.querySelector(".js-input-name");
 const linkNewFormElememt = document.querySelector(".js-button-new-form");
 const labelMessageError = document.querySelector(".js-label-error");
 const input_search_desc = document.querySelector(".js_in_search_desc");
-const input_search_race =document.querySelector(".js_in_search_race");
+const input_search_race = document.querySelector(".js_in_search_race");
+
+const GITHUB_USER = "<IsabelCollado>";
+const SERVER_URL = `https://dev.adalab.es/api/kittens/${GITHUB_USER}`;
 //Objetos con cada gatito
 const kittenData_1 = {
   image: "https://dev.adalab.es/gato-siames.webp",
@@ -33,7 +36,22 @@ const kittenData_3 = {
   race: "Maine Coon",
 };
 
-const kittenDataList = [kittenData_1, kittenData_2, kittenData_3];
+/*const kittenDataList = [kittenData_1, kittenData_2, kittenData_3];*/
+
+//Haz un fetch para obtener el listado de gatitos.
+
+let kittenDataList = [];
+
+fetch(SERVER_URL, {
+  method: "GET",
+  headers: { "Content-Type": "application/json" },
+})
+  .then((responses) => responses.json())
+  .then((data) => {
+    kittenDataList = data.results;
+    renderKittenList(kittenDataList);
+    console.log(kittenDataList);
+  });
 
 //Funciones
 function renderKitten(kittenData) {
@@ -114,28 +132,28 @@ function filterKitten(event) {
   const descrSearchText = input_search_desc.value.toLowerCase();
   const raceSearchText = input_search_race.value.toLowerCase();
   listElement.innerHTML = "";
-  console .log( raceSearchText)
- // const filtered = kittenDataList.filter((kittenItem) => 
-    const kittenListFiltered = kittenDataList.filter((kittenItem) =>{return kittenItem.desc.toLowerCase().includes(descrSearchText)})
-  
-    .filter(kittenItem =>kittenItem.race.toLowerCase().includes(raceSearchText));
-    renderKittenList(kittenListFiltered)
-    } 
-    
-    
-   
-    
-   
- 
- // listElement.innerHTML += renderKitten(kittenItem);
+  console.log(raceSearchText);
+  // const filtered = kittenDataList.filter((kittenItem) =>
 
+  const kittenListFiltered = kittenDataList
+    .filter((kittenItem) => {
+      return kittenItem.desc.toLowerCase().includes(descrSearchText);
+    })
+
+    .filter((kittenItem) =>
+      kittenItem.race.toLowerCase().includes(raceSearchText)
+    );
+  renderKittenList(kittenListFiltered);
+}
+
+// listElement.innerHTML += renderKitten(kittenItem);
 
 /*for (const kittenItem of kittenDataList) {
     if (kittenItem.desc.includes(descrSearchText)) {
       listElement.innerHTML += renderKitten(kittenItem);
     }*/
 
-//Mostrar el litado de gatitos en ell HTML
+//Mostrar el listado de gatitos en el HTML
 renderKittenList(kittenDataList);
 
 //Eventos
