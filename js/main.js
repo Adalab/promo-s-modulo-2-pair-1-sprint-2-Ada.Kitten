@@ -12,7 +12,7 @@ const inputName = document.querySelector(".js-input-name");
 const linkNewFormElememt = document.querySelector(".js-button-new-form");
 const labelMessageError = document.querySelector(".js-label-error");
 const input_search_desc = document.querySelector(".js_in_search_desc");
-
+const input_search_race =document.querySelector(".js_in_search_race");
 //Objetos con cada gatito
 const kittenData_1 = {
   image: "https://dev.adalab.es/gato-siames.webp",
@@ -112,12 +112,23 @@ function cancelNewKitten(event) {
 function filterKitten(event) {
   event.preventDefault();
   const descrSearchText = input_search_desc.value.toLowerCase();
+  const raceSearchText = input_search_race.value.toLowerCase();
   listElement.innerHTML = "";
-  const filtered = kittenDataList.filter((kittenItem) =>
-    kittenItem.desc.toLowerCase().includes(descrSearchText)
-  );
-  listElement.innerHTML += renderKitten(kittenItem);
-}
+  console .log( raceSearchText)
+ // const filtered = kittenDataList.filter((kittenItem) => 
+    const kittenListFiltered = kittenDataList.filter((kittenItem) =>{return kittenItem.desc.toLowerCase().includes(descrSearchText)})
+  
+    .filter(kittenItem =>kittenItem.race.toLowerCase().includes(raceSearchText));
+    renderKittenList(kittenListFiltered)
+    } 
+    
+    
+   
+    
+   
+ 
+ // listElement.innerHTML += renderKitten(kittenItem);
+
 
 /*for (const kittenItem of kittenDataList) {
     if (kittenItem.desc.includes(descrSearchText)) {
