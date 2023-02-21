@@ -16,6 +16,7 @@ const input_search_race = document.querySelector(".js_in_search_race");
 
 const GITHUB_USER = "<IsabelCollado>";
 const SERVER_URL = `https://dev.adalab.es/api/kittens/${GITHUB_USER}`;
+
 //Objetos con cada gatito
 const kittenData_1 = {
   image: "https://dev.adalab.es/gato-siames.webp",
@@ -40,9 +41,27 @@ const kittenData_3 = {
 
 //Haz un fetch para obtener el listado de gatitos.
 
+const kittenListStored = JSON.parse(localStorage.getItem("kittensList"));
+
 let kittenDataList = [];
 
-fetch(SERVER_URL, {
+if (kittenListStored) {
+  kittensList = kittenListStored;
+  renderKitten();
+} else {
+  fetch(SERVER_URL)
+    .then((response) => response.json())
+    .then((data) => {
+      localStorage.setItem("kittenDataList", JSON.stringify(data.results));
+      kittenDataList = data.results;
+      renderKittenList(kittenDataList);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+}
+
+/*fetch(SERVER_URL, {
   method: "GET",
   headers: { "Content-Type": "application/json" },
 })
@@ -51,7 +70,7 @@ fetch(SERVER_URL, {
     kittenDataList = data.results;
     renderKittenList(kittenDataList);
     console.log(kittenDataList);
-  });
+  });*/
 
 //Funciones
 function renderKitten(kittenData) {
@@ -96,6 +115,7 @@ function handleClickNewCatForm(event) {
   }
 }
 //Adicionar nuevo gatito
+
 function addNewKitten(event) {
   event.preventDefault();
   const valueDesc = inputDesc.value;
@@ -112,7 +132,26 @@ function addNewKitten(event) {
       desc: valueDesc,
       race: "",
     };
-    kittenDataList.push(newKittenDataObject);
+
+    fetch(`https://dev.adalab.es/api/kittens/${GITHUB_USER}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newKittenDataObject),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          kittenDataList.push(newKittenDataObject);
+          newKittenDataObject = data.success;
+
+          //Completa y/o modifica el código:
+          //Guarda el listado actualizado en el local stoarge
+          //Visualiza nuevamente el listado de gatitos
+          //Limpia los valores de cada input
+        } else {
+          console.error(error);
+        }
+      });
   }
   renderKittenList(kittenDataList);
 }
