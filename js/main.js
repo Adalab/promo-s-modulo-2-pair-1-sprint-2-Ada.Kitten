@@ -8,6 +8,7 @@ const buttonAdd = document.querySelector(".js-btn-add");
 const buttonCancelForm = document.querySelector(".js-btn-cancel");
 const inputDesc = document.querySelector(".js-input-desc");
 const inputPhoto = document.querySelector(".js-input-photo");
+const inputRace = document.querySelector(".js-input-race");
 const inputName = document.querySelector(".js-input-name");
 const linkNewFormElememt = document.querySelector(".js-button-new-form");
 const labelMessageError = document.querySelector(".js-label-error");
@@ -41,7 +42,7 @@ const kittenData_3 = {
 
 //Haz un fetch para obtener el listado de gatitos.
 
-const kittenListStored = JSON.parse(localStorage.getItem("kittensList"));
+let kittenListStored = JSON.parse(localStorage.getItem("kittensList"));
 
 let kittenDataList = [];
 
@@ -116,6 +117,14 @@ function handleClickNewCatForm(event) {
 }
 //Adicionar nuevo gatito
 
+function resetInputs() {
+  inputDesc.value = "";
+  inputName.value = "";
+  inputPhoto.value = "";
+  inputRace.value = "";
+  labelMessageError.innerHTML = "";
+}
+
 function addNewKitten(event) {
   event.preventDefault();
   const valueDesc = inputDesc.value;
@@ -126,14 +135,14 @@ function addNewKitten(event) {
     labelMessageError.innerHTML = "¡Uy! parece que has olvidado algo";
   } else if (valueDesc !== "" && valuePhoto !== "" && valueName !== "") {
     labelMessageError.innerHTML = "Mola! Un nuevo gatito en Adalab!";
-    const newKittenDataObject = {
+    let newKittenDataObject = {
       image: valuePhoto,
       name: valueName,
       desc: valueDesc,
       race: "",
     };
 
-    fetch(`https://dev.adalab.es/api/kittens/${GITHUB_USER}`, {
+    fetch(SERVER_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newKittenDataObject),
@@ -142,18 +151,18 @@ function addNewKitten(event) {
       .then((data) => {
         if (data.success) {
           kittenDataList.push(newKittenDataObject);
-          newKittenDataObject = data.success;
+          kittenListStored = localStorage.setItem(
+            "kittenDataList",
+            JSON.stringify(kittenDataList)
+          );
 
-          //Completa y/o modifica el código:
-          //Guarda el listado actualizado en el local stoarge
-          //Visualiza nuevamente el listado de gatitos
-          //Limpia los valores de cada input
+          renderKittenList(kittenDataList);
         } else {
           console.error(error);
         }
       });
+    resetInputs();
   }
-  renderKittenList(kittenDataList);
 }
 
 //Cancelar la búsqueda de un gatito
