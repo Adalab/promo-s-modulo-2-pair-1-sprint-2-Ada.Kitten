@@ -91,7 +91,19 @@ function renderKitten(kittenData) {
     </li>`;
   return kitten;
 }
-
+for (const item of listCats) {
+  function renderKitten(kittenData) {
+    const liElement = document.createElement("li");
+    liElement.classList.add("list");
+    const articleElement = document.createElement("article");
+    const h3Element = document.createElement("h3");
+    const title = document.createTextNode(item.title);
+    h3Element.appendChild(title);
+    const pElement = document.createElement("p");
+    const desc = document.createTextNode(item.desc);
+    pElement.appendChild(desc);
+  }
+}
 function renderKittenList(kittenDataList) {
   listElement.innerHTML = "";
   for (const kittenItem of kittenDataList) {
